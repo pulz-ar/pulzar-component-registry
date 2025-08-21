@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pulzar/thread",
+  "type": "registry:component",
+  "title": "Pulzar Thread",
+  "description": "Wrapper de Conversation para threads de chat Pulzar.",
+  "registryDependencies": [
+    "https://registry.ai-sdk.dev/all.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/pulzar/thread.tsx",
+      "content": "\"use client\"\n\nimport React from \"react\"\nimport {\n  Conversation as AIEConversation,\n  ConversationContent as AIEConversationContent,\n  ConversationScrollButton as AIEConversationScrollButton,\n} from \"@/components/ai-elements/conversation\"\n\nexport function Thread({ children, className }: { children?: React.ReactNode; className?: string }) {\n  return (\n    <AIEConversation className={className}>{children}</AIEConversation>\n  )\n}\n\nexport const ThreadContent = AIEConversationContent\nexport const ThreadScrollButton = AIEConversationScrollButton\n\n\n",
+      "type": "registry:component"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "inventory",
+  "type": "registry:component",
+  "title": "Inventory",
+  "description": "High-level inventory component with InstantDB mini-schema, service/data interfaces and pure view.",
+  "registryDependencies": [
+    "button",
+    "input",
+    "label",
+    "textarea",
+    "card",
+    "badge"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/inventory/instant.schema.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "registry/new-york/blocks/inventory/types.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "registry/new-york/blocks/inventory/service.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "registry/new-york/blocks/inventory/Inventory.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/new-york/blocks/inventory/page.tsx",
+      "type": "registry:page",
+      "target": "app/inventory/page.tsx"
+    }
+  ]
+}
+
+

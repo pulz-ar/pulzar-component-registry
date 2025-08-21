@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pulzar/prompt",
+  "type": "registry:component",
+  "title": "Pulzar Prompt",
+  "description": "Wrapper de PromptInput con botón de voz opcional.",
+  "registryDependencies": [
+    "https://registry.ai-sdk.dev/all.json"
+  ],
+  "files": [
+    {
+      "path": "registry/new-york/blocks/pulzar/prompt.tsx",
+      "content": "\"use client\"\n\nimport React from \"react\"\nimport {\n  PromptInput,\n  PromptInputButton,\n  PromptInputSubmit,\n  PromptInputTextarea,\n  PromptInputToolbar,\n} from \"@/components/ai-elements/prompt-input\"\n\nimport { Mic, ArrowUp, Plus } from \"lucide-react\"\n\nexport function Prompt({\n  value,\n  onChange,\n  onSubmit,\n  onToggleVoice,\n  reasoningLevel,\n  onChangeReasoning,\n}: {\n  value: string\n  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void\n  onSubmit: (e: React.FormEvent) => void\n  onToggleVoice?: () => void\n  reasoningLevel?: 0 | 1 | 2 | 3\n  onChangeReasoning?: (v: 0 | 1 | 2 | 3) => void\n}) {\n  const isDirty = (value || \"\").trim().length > 0\n  return (\n    <PromptInput onSubmit={onSubmit}>\n      <PromptInputTextarea value={value} onChange={onChange} minHeight={64} className=\"text-base\" />\n      <PromptInputToolbar>\n        <div className=\"flex items-center gap-1 min-h-9\">\n          <button type=\"button\" aria-label=\"Más opciones\" title=\"Más opciones\" className=\"h-9 w-9 grid place-items-center border rounded-none rounded-bl-2xl bg-transparent\">\n            <Plus className=\"h-4 w-4\" />\n          </button>\n        </div>\n        <div className=\"flex items-center gap-1 min-h-9\">\n          {onToggleVoice && (\n            <button type=\"button\" aria-label=\"Voz\" title=\"Voz\" className=\"h-9 w-9 grid place-items-center border rounded-lg bg-transparent\" onClick={onToggleVoice}>\n              <Mic className=\"h-4 w-4\" />\n            </button>\n          )}\n          <PromptInputSubmit disabled={!isDirty} className=\"h-9 w-9 grid place-items-center border rounded-none rounded-br-2xl bg-transparent\">\n            <ArrowUp className=\"h-4 w-4\" />\n          </PromptInputSubmit>\n        </div>\n      </PromptInputToolbar>\n    </PromptInput>\n  )\n}\n\n\n",
+      "type": "registry:component"
+    }
+  ]
+}

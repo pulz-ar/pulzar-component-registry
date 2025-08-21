@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pulzar-agent",
+  "type": "registry:component",
+  "title": "Pulzar Agent (AI SDK + AI Elements)",
+  "description": "Full chat agent UI built on AI SDK and AI Elements with optional web search and reasoning level controls.",
+  "dependencies": [
+    "ai",
+    "react",
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button",
+    "textarea",
+    "badge",
+    "tooltip",
+    "carousel",
+    "hover-card",
+    "scroll-area",
+    "input"
+  ],
+  "files": [
+    { "path": "registry/new-york/blocks/ai-elements/conversation.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/message.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/prompt-input.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/response.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/loader.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/source.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/reasoning.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/reasoning-level.tsx", "type": "registry:component" },
+    { "path": "registry/new-york/blocks/ai-elements/lib/utils.ts", "type": "registry:lib" },
+    { "path": "registry/new-york/blocks/pulzar/agent.tsx", "type": "registry:component" }
+  ]
+}
+
+
