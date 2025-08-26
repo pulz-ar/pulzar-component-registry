@@ -1,155 +1,97 @@
 "use client"
 
 import React, { useState } from "react"
-import { useChat } from "@ai-sdk/react"
-import { Conversation, ConversationContent, ConversationScrollButton } from '../ai-elements/conversation'
-import { Message, MessageContent } from '../ai-elements/message'
-import {
-  PromptInput,
-  PromptInputButton,
-  PromptInputSubmit,
-  PromptInputTextarea,
-  PromptInputToolbar,
-  PromptInputTools,
-} from '../ai-elements/prompt-input'
-import { Response } from '../ai-elements/response'
-import { Sources, SourcesContent, SourcesTrigger, Source } from '../ai-elements/source'
-import { Reasoning, ReasoningContent, ReasoningTrigger } from '../ai-elements/reasoning'
-import { Loader } from '../ai-elements/loader'
-import { GlobeIcon, SendIcon } from "lucide-react"
-import { ReasoningLevelSelect } from '../ai-elements/reasoning-level'
+import { useThread } from './use-thread'
+import { Thread, ThreadContent, ThreadScrollButton } from './thread'
+import { Event as ThreadEvent } from './event'
+import { Prompt } from './prompt'
 
-type Props = {
-  domain?: string
-  className?: string
-  initialPrompt?: string
-  initialWebSearch?: boolean
-  initialReasoningLevel?: 0 | 1 | 2 | 3
-}
+import { Loader } from '@/components/ai-elements/loader'
+import { id } from "@instantdb/core"
 
-const bootGuard: { lastPrompt?: string; lastAt?: number } = (globalThis as any).__pulzarAgentBootGuard || {}
-;(globalThis as any).__pulzarAgentBootGuard = bootGuard
+// Guard global para evitar doble envío de initialPrompt por Strict Mode (dev)
+const agentBootGuard: { lastPrompt?: string; lastAt?: number } = (globalThis as any).__pulzarAgentBootGuard || {}
+;(globalThis as any).__pulzarAgentBootGuard = agentBootGuard
 
-export default function Agent({ domain, className, initialPrompt, initialWebSearch, initialReasoningLevel }: Props) {
-  const [input, setInput] = useState("")
+
+export default function Agent({ domain, className, initialPrompt, initialWebSearch, initialReasoningLevel }: { domain?: string; className?: string; initialPrompt?: string; initialWebSearch?: boolean; initialReasoningLevel?: 0 | 1 | 2 | 3 }) {
   const [webSearch, setWebSearch] = useState(Boolean(initialWebSearch))
   const [reasoningLevel, setReasoningLevel] = useState<0 | 1 | 2 | 3>(typeof initialReasoningLevel === 'number' ? initialReasoningLevel as 0|1|2|3 : 1)
-  const { messages, sendMessage, status } = useChat()
-  const [isSending, setIsSending] = useState(false)
-  const [bootSent, setBootSent] = useState(false)
+  const [threadId] = useState<string>(id())
+  const { events, status, input, handleInputChange, handleSubmit } = useThread({ threadId, url: "/api/stories/" + threadId })
+  const [isUploading, setIsUploading] = useState(false)
+  const [attachments, setAttachments] = useState<Array<{ id: string, file: File, previewURL: string, name: string, size?: string, type?: string, status: 'uploading'|'done'|'error', uploadedId?: string }>>([])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!input.trim() || isSending) return
-    setIsSending(true)
-    sendMessage(
-      { text: input },
-      { body: { webSearch, reasoningLevel, domain } as any },
-    )
-    setInput("")
-    setTimeout(() => setIsSending(false), 0)
+  async function handleFilesSelected(files: FileList) {
+    const list = Array.from(files)
+    const previews = list.map((file, idx) => ({ id: `${Date.now()}-${idx}`, file, previewURL: URL.createObjectURL(file), name: file.name, size: `${Math.round(file.size/1024)} KB`, type: file.type, status: 'uploading' as const }))
+    setAttachments((prev) => [...prev, ...previews])
+    setIsUploading(true)
+    try {
+      // Stub upload to backend. We only POST to a placeholder endpoint; backend not implemented yet
+      const form = new FormData()
+      previews.forEach((p) => form.append("files", p.file))
+      const resp = await fetch(`/api/stories/${threadId}/upload`, { method: "POST", body: form })
+      const json = await resp.json().catch(() => ({} as any))
+      const serverFiles = Array.isArray(json?.files) ? json.files : []
+      // Update only the batch we just uploaded, by matching the local preview ids
+      setAttachments((prev) => prev.map((p) => {
+        const idx = previews.findIndex((pp) => pp.id === p.id)
+        if (idx === -1) { return p }
+        const f = serverFiles[idx]
+        if (f) { return { ...p, status: 'done', uploadedId: f.id } }
+        return { ...p, status: 'error' }
+      }))
+    } finally {
+      setIsUploading(false)
+    }
   }
 
-  React.useEffect(() => {
-    if (!bootSent && initialPrompt && initialPrompt.trim().length > 0) {
-      const now = Date.now()
-      if (bootGuard.lastPrompt === initialPrompt && typeof bootGuard.lastAt === 'number' && now - (bootGuard.lastAt as number) < 5000) {
-        setBootSent(true)
-        return
-      }
-      bootGuard.lastPrompt = initialPrompt
-      bootGuard.lastAt = now
-      setBootSent(true)
-      setIsSending(true)
-      sendMessage(
-        { text: initialPrompt },
-        { body: { webSearch: false, reasoningLevel, domain } as any },
-      )
-      setTimeout(() => setIsSending(false), 0)
-    }
-  }, [bootSent, initialPrompt, domain, reasoningLevel, sendMessage])
+  function handleRemoveAttachment(id: string) {
+    setAttachments((prev) => prev.filter((a) => a.id !== id))
+  }
 
   return (
-    <main className={["min-h-screen md:h-screen p-0 h-full", className || ""].join(" ") }>
+    <main className={["min-h-[calc(100vh-64px)] md:h-[calc(100vh-64px)] p-0 h-full", className || ""].join(" ") }>
       <div className="w-full md:h-full">
         <div className="px-6 py-6 h-full">
           <div className="h-full max-w-4xl mx-auto">
             <div className="flex flex-col h-full">
-              <Conversation className="h-full">
-                <ConversationContent>
-                  {messages.map((message) => (
-                    <div key={message.id as any}>
-                      {message.role === 'assistant' && (
-                        <Sources>
-                          {message.parts.map((part: any, i: number) => {
-                            if (part.type === 'source-url') {
-                              return (
-                                <React.Fragment key={`src-${message.id}-${i}`}>
-                                  <SourcesTrigger count={message.parts.filter((p: any) => p.type === 'source-url').length} />
-                                  <SourcesContent>
-                                    <Source href={part.url} title={part.url} />
-                                  </SourcesContent>
-                                </React.Fragment>
-                              )
-                            }
-                            return null
-                          })}
-                        </Sources>
-                      )}
-                      <Message from={message.role}>
-                        <MessageContent>
-                          {message.parts.map((part: any, i: number) => {
-                            switch (part.type) {
-                              case 'text':
-                                return <Response key={`${message.id}-${i}`}>{part.text}</Response>
-                              case 'reasoning':
-                                return (
-                                  <Reasoning key={`${message.id}-${i}`} className="w-full" isStreaming={status === 'streaming'}>
-                                    <ReasoningTrigger />
-                                    <ReasoningContent>{part.text}</ReasoningContent>
-                                  </Reasoning>
-                                )
-                              default:
-                                return null
-                            }
-                          })}
-                        </MessageContent>
-                      </Message>
+              <Thread className="h-full">
+                <ThreadContent>
+                  {(events || []).map((e) => (
+                    <div key={e.id}>
+                      <ThreadEvent
+                        role={e.role}
+                        parts={Array.isArray((e as any).parts)
+                          ? (e as any).parts
+                          : [{ type: 'text', text: String((e as any)?.payload?.body?.text || '') }]}
+                        isStreaming={status === 'streaming'}
+                      />
                     </div>
                   ))}
                   {status === 'submitted' && <Loader />}
-                </ConversationContent>
-                <ConversationScrollButton />
-              </Conversation>
+                </ThreadContent>
+                <ThreadScrollButton />
+              </Thread>
 
-              <PromptInput onSubmit={handleSubmit as any} className="mt-4">
-                <PromptInputTextarea onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)} value={input} />
-                <PromptInputToolbar>
-                  <PromptInputTools>
-                    <PromptInputButton
-                      variant={'outline'}
-                      className={
-                        (webSearch
-                          ? 'bg-foreground/90 text-background hover:bg-foreground '
-                          : 'bg-transparent text-foreground/80 hover:bg-accent/30 ') +
-                        ' h-9 w-9 !p-0 !px-0 !py-0 leading-none grid place-items-center border border-border rounded-none rounded-bl-xl'
-                      }
-                      onClick={() => setWebSearch(!webSearch)}
-                    >
-                      <GlobeIcon className="size-5 shrink-0" strokeWidth={1.75} />
-                    </PromptInputButton>
-                    <ReasoningLevelSelect value={reasoningLevel} onChange={setReasoningLevel} />
-                  </PromptInputTools>
-                  <PromptInputSubmit
-                    disabled={!input}
-                    status={status as any}
-                    className={'h-9 w-9 !p-0 !px-0 !py-0 leading-none grid place-items-center border border-border rounded-none rounded-br-xl bg-transparent text-foreground hover:bg-accent/30'}
-                    variant={'outline'}
-                  >
-                    <SendIcon className="size-5" strokeWidth={1.75} />
-                  </PromptInputSubmit>
-                </PromptInputToolbar>
-              </PromptInput>
+              <div className="mt-4">
+                <Prompt
+                  value={input}
+                  onChange={handleInputChange as any}
+                  onSubmit={handleSubmit}
+                  onToggleVoice={() => {}}
+                  reasoningLevel={reasoningLevel}
+                  onChangeReasoning={setReasoningLevel}
+                  webSearch={webSearch}
+                  onToggleWeb={() => setWebSearch(!webSearch)}
+                  status={status as any}
+                  onFilesSelected={handleFilesSelected}
+                  isUploading={isUploading}
+                  attachments={attachments.map((a) => ({ id: a.id, name: a.name, size: a.size, previewURL: a.previewURL, status: a.status, type: a.type })) as any}
+                  onRemoveAttachment={handleRemoveAttachment}
+                />
+              </div>
             </div>
           </div>
         </div>

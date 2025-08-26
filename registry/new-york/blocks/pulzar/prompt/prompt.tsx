@@ -1,11 +1,11 @@
 import React from "react"
-import PromptTextarea from "./prompt/prompt-textarea"
-import PromptWebButton from "./prompt/prompt-button-web"
-import PromptReasoningButton from "./prompt/prompt-button-reasoning"
-import PromptVoiceButton from "./prompt/prompt-button-voice"
-import PromptSendButton from "./prompt/prompt-button-send"
-import PromptAttachButton from "./prompt/prompt-button-attach"
-import PromptFileChip, { type PromptAttachment } from "./prompt/prompt-file-chip"
+import PromptTextarea from "./prompt-textarea"
+import PromptWebButton from "./prompt-button-web"
+import PromptReasoningButton from "./prompt-button-reasoning"
+import PromptVoiceButton from "./prompt-button-voice"
+import PromptSendButton from "./prompt-button-send"
+import PromptAttachButton from "./prompt-button-attach"
+import PromptFileChip, { type PromptAttachment } from "./prompt-file-chip"
 import { cn } from "@/lib/utils"
 
 export function Prompt({

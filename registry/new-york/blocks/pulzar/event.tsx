@@ -1,5 +1,3 @@
-"use client"
-
 import React from "react"
 import { Message as AIMessage, MessageContent as AIMessageContent } from "@/components/ai-elements/message"
 import { Response } from "@/components/ai-elements/response"
@@ -14,11 +12,11 @@ import { Task } from "@/components/ai-elements/task"
 import { Tool } from "@/components/ai-elements/tool"
 import { WebPreview } from "@/components/ai-elements/web-preview"
 
-export function Event({ role, parts, isStreaming }: { role: string; parts: Array<any>; isStreaming?: boolean }) {
+export function Event({ role, parts, isStreaming }: { role: string; parts?: Array<any>; isStreaming?: boolean }) {
   return (
     <AIMessage from={role as any}>
       <AIMessageContent>
-        {parts.map((part: any, i: number) => {
+        {parts?.map((part: any, i: number) => {
           try {
             switch (part?.type) {
               case 'text':
@@ -42,19 +40,27 @@ export function Event({ role, parts, isStreaming }: { role: string; parts: Array
               case 'code':
                 return <CodeBlock key={i} language={String(part.language || 'tsx')} code={String(part.code || part.text || '')} />
               case 'image':
-                return <AIImage key={i} alt={String(part.alt || 'image')} src={String(part.url || part.src || '')} />
+                return (
+                  <AIImage
+                    key={i}
+                    alt={String(part.alt || 'image')}
+                    base64={String(part.base64 || '')}
+                    mediaType={String(part.mediaType || 'image/png')}
+                    uint8Array={new Uint8Array()}
+                  />
+                )
               case 'inline-citation':
-                return <InlineCitation key={i} text={String(part.text || '')} sources={Array.isArray(part.sources) ? part.sources : []} />
+                return <InlineCitation key={i} />
               case 'loader':
                 return <Loader key={i} />
               case 'suggestion':
-                return <Suggestion key={i} text={String(part.text || '')} />
+                return <Suggestion key={i} suggestion={String(part.text || '')} />
               case 'task':
-                return <Task key={i} status={String(part.status || '')} title={String(part.title || '')} />
+                return <Task key={i} />
               case 'tool':
-                return <Tool key={i} name={String(part.name || '')} status={String(part.status || '')} />
+                return <Tool key={i} />
               case 'web-preview':
-                return <WebPreview key={i} url={String(part.url || '')} />
+                return <WebPreview key={i} defaultUrl={String(part.url || '')} />
               default:
                 return null
             }

@@ -80,14 +80,23 @@
       "title": "Pulzar Prompt",
       "description": "Wrapper de PromptInput con botón de voz opcional.",
       "registryDependencies": [
-        "https://registry.ai-sdk.dev/all.json"
+        "https://registry.ai-sdk.dev/all.json",
+        "select",
+        "tooltip",
+        "utils"
+      ],
+      "dependencies": [
+        "lucide-react"
       ],
       "files": [
-        {
-          "path": "registry/new-york/blocks/pulzar/prompt.tsx",
-          "type": "registry:component",
-          "target": "components/pulzar/prompt.tsx"
-        }
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-textarea.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-textarea.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-button.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-button.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-button-web.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-button-web.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-button-reasoning.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-button-reasoning.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-button-voice.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-button-voice.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-button-attach.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-button-attach.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/prompt/prompt-file-chip.tsx", "type": "registry:component", "target": "components/pulzar/prompt/prompt-file-chip.tsx" }
       ]
     },
     {
@@ -104,6 +113,19 @@
           "type": "registry:component",
           "target": "components/pulzar/orb.tsx"
         }
+      ]
+    },
+    {
+      "name": "pulzar/agent",
+      "type": "registry:block",
+      "title": "Pulzar Agent",
+      "description": "Agente de chat que combina Thread, Event y Prompt avanzados.",
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
+      "files": [
+        { "path": "registry/new-york/blocks/pulzar/agent.tsx", "type": "registry:component", "target": "components/pulzar/agent.tsx" },
+        { "path": "registry/new-york/blocks/pulzar/use-thread.ts", "type": "registry:component", "target": "components/pulzar/use-thread.ts" }
       ]
     }
   ]

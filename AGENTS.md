@@ -18,13 +18,31 @@ pnpm run registry:build;
 
 - Instalar un item puntual (ej. orb):
 ```powershell
-pnpm dlx shadcn@latest add http://localhost:3002/r/pulzar/orb.json;
+pnpm dlx shadcn@latest add https://registry.pulz.ar/orb;
 ```
 
 - Instalar todos los wrappers Pulzar:
 ```powershell
-pnpm dlx shadcn@latest add http://localhost:3002/r/all.json;
+pnpm dlx shadcn@latest add https://registry.pulz.ar/all;
 ```
+
+## Agents (proceso obligatorio)
+
+Para asegurar que siempre se siga el proceso de specs y guías, instalar el item de documentación `pulzar/agents` en cada proyecto:
+
+```powershell
+pnpm dlx shadcn@latest add https://registry.pulz.ar/agents;
+```
+
+Esto agrega los archivos de referencia del proceso:
+
+- `AGENTS.md` (guía de arquitectura y patrones del registry)
+- `lib/domain/specs-definition.md` (definición normativa de specs)
+
+Referencias directas en el registry:
+
+- Item `pulzar/agents` en `components/pulzar-component-registry/registry.json`
+- JSON público: `components/pulzar-component-registry/public/r/pulzar/agents.json`
 
 ## Notas
 
