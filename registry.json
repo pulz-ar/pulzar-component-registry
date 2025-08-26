@@ -11,14 +11,14 @@
       "files": [
         {
           "path": "registry/AGENTS.md",
-          "type": "registry:readme",
-          "target": "~/AGENTS.md"
+          "type": "registry:item",
+          "target": "AGENTS.md"
 
         },
         {
-          "path": "registry/spec-definition.md",
-          "type": "registry:readme",
-          "target": "~/lib/domain/specs-definition.md"
+          "path": "registry/specs-definition.md",
+          "type": "registry:item",
+          "target": "lib/domain/specs-definition.md"
         }
       ]
     },

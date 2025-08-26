@@ -1,0 +1,8 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pulzar/stories",
+  "type": "registry:block",
+  "title": "Story‑Driven AI (SDK Draft)",
+  "description": "Unifica prompt + tools + estado. event → story loop.",
+  "files": []
+}
