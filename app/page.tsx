@@ -11,9 +11,11 @@ type RegistryItem = {
 
 export default function Home() {
   const items = React.useMemo(() => {
-    const arr = Array.isArray((registry as any)?.items) ? (registry as any).items : []
-    const mapped: RegistryItem[] = arr.map((it: any) => {
-      return { name: String(it?.name || ""), title: it?.title ? String(it.title) : undefined, description: it?.description ? String(it.description) : undefined }
+    const reg: unknown = registry
+    const arr = Array.isArray((reg as { items?: unknown })?.items) ? (reg as { items: unknown[] }).items : []
+    const mapped: RegistryItem[] = arr.map((it: unknown) => {
+      const item = it as Partial<RegistryItem> & { name?: string; title?: string; description?: string }
+      return { name: String(item?.name || ""), title: item?.title ? String(item.title) : undefined, description: item?.description ? String(item.description) : undefined }
     })
     return mapped
   }, [])

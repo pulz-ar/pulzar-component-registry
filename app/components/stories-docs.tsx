@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import { Response } from "@/components/ai-elements/response"
 import { CodeBlock } from "@/components/ai-elements/code-block"
 
 export function StoriesDocs() {

@@ -5,7 +5,7 @@ import { openai } from "@ai-sdk/openai"
 export const runtime = "nodejs"
 
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => ({} as any))
+  const body = await req.json().catch(() => ({}))
   const messages = Array.isArray(body?.messages) ? body.messages : []
   if (!process.env.OPENAI_API_KEY) {
     return new Response(JSON.stringify({ error: "OPENAI_API_KEY no configurado" }), { status: 500, headers: { "Content-Type": "application/json" } })
