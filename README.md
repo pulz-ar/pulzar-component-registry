@@ -13,12 +13,12 @@ Wrappers `@pulzar/*` instalables vía `shadcn` CLI. Incluye demo en `/`.
 
 - Instalar un item por URL:
 ```powershell
-pnpm dlx shadcn@latest add https://registry.pulz.ar/r/pulzar/orb.json;
+pnpm dlx shadcn@latest add https://registry.pulz.ar/orb;
 ```
 
 - Instalar todos los wrappers Pulzar de una vez:
 ```powershell
-pnpm dlx shadcn@latest add https://registry.pulz.ar/r/all.json;
+pnpm dlx shadcn@latest add https://registry.pulz.ar/all;
 ```
 
 ## Desarrollo del registry
