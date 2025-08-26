@@ -23,13 +23,13 @@ export function Viewer({ item, className }: { item: RegistryItemMeta; className?
           {item.description && <p className="text-sm text-muted-foreground">{item.description}</p>}
         </div>
       </header>
-      {renderPreview(item.name)}
+      <Preview name={item.name} />
       {renderSnippets(item.name)}
     </section>
   )
 }
 
-function renderPreview(name: string) {
+function Preview({ name }: { name: string }) {
   if (name === "pulzar/stories") {
     return (
       <div className="border rounded-md p-2">
@@ -78,7 +78,7 @@ function renderPreview(name: string) {
       <div className="border rounded-md p-2">
         <div className="space-y-2">
           {examples.map((m, i) => (
-            <ThreadEvent key={i} role={m.role} parts={m.parts as any[]} />
+            <ThreadEvent key={i} role={m.role} parts={m.parts as Array<Record<string, unknown>>} />
           ))}
         </div>
       </div>
@@ -166,12 +166,14 @@ import { Orb } from "@/components/pulzar/orb";`
   return null
 }
 
-function useDemoMessages(): [{ role: string; parts: any[] }[], string] {
+type DemoMessage = { role: string; parts: Array<Record<string, unknown>> }
+
+function useDemoMessages(): [DemoMessage[], string] {
   const [status] = React.useState("idle")
   const messages = React.useMemo(() => {
     return [
-      { role: "user", parts: [{ type: "text", text: "Hola Pulzar" }] },
-      { role: "assistant", parts: [{ type: "text", text: "¡Hola! ¿En qué te ayudo?" }, { type: "reasoning", text: "Pensando opciones..." }] },
+      { role: "user", parts: [{ type: "text", text: "Hola Pulzar" } as Record<string, unknown>] },
+      { role: "assistant", parts: [{ type: "text", text: "¡Hola! ¿En qué te ayudo?" } as Record<string, unknown>, { type: "reasoning", text: "Pensando opciones..." } as Record<string, unknown>] },
     ]
   }, [])
   return [messages, status]
