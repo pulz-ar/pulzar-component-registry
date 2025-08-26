@@ -29,7 +29,7 @@ export function Prompt({
   const isDirty = (value || "").trim().length > 0
   return (
     <PromptInput onSubmit={onSubmit}>
-      <PromptInputTextarea value={value} onChange={onChange} minHeight={64} className="text-base" />
+      <PromptInputTextarea value={value} minHeight={64} className="text-base" />
       <PromptInputToolbar>
         <div className="flex items-center gap-1 min-h-9">
           <button type="button" aria-label="Más opciones" title="Más opciones" className="h-9 w-9 grid place-items-center border rounded-none rounded-bl-2xl bg-transparent">

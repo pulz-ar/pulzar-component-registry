@@ -1,23 +1,45 @@
-# registry-template
+# Pulzar Component Registry
 
-You can use the `shadcn` CLI to run your own component registry. Running your own
-component registry allows you to distribute your custom components, hooks, pages, and
-other files to any React project.
+Wrappers `@pulzar/*` instalables vía `shadcn` CLI. Incluye demo en `/`.
 
-> [!IMPORTANT]  
-> This template uses Tailwind v4. For Tailwind v3, see [registry-template](https://github.com/shadcn-ui/registry-template).
+## Items disponibles
 
-## Getting Started
+- `pulzar/thread` – Thread, ThreadContent, ThreadScrollButton
+- `pulzar/event` – Evento universal (text, reasoning, source-url, code, image, inline-citation, loader, suggestion, task, tool, web-preview)
+- `pulzar/prompt` – Prompt input con botón de voz opcional
+- `pulzar/orb` – Orb animado (canvas) con shaders opcionales
 
-This is a template for creating a custom registry using Next.js.
+## Instalar desde este registry
 
-- The template uses a `registry.json` file to define components and their files.
-- The `shadcn build` command is used to build the registry.
-- The registry items are served as static files under `public/r/[name].json`.
-- The template also includes a route handler for serving registry items.
-- Every registry item are compatible with the `shadcn` CLI.
-- We have also added v0 integration using the `Open in v0` api.
+- Instalar un item por URL:
+```powershell
+pnpm dlx shadcn@latest add http://localhost:3002/r/pulzar/orb.json;
+```
 
-## Documentation
+- Instalar todos los wrappers Pulzar de una vez:
+```powershell
+pnpm dlx shadcn@latest add http://localhost:3002/r/all.json;
+```
 
-Visit the [shadcn documentation](https://ui.shadcn.com/docs/registry) to view the full documentation.
+## Desarrollo del registry
+
+- Agregar un item en `registry.json` con su `files` y dependencias.
+- Exportar los archivos bajo `registry/new-york/blocks/pulzar/*`.
+- Construir los JSON:
+```powershell
+pnpm run registry:build;
+```
+
+Los archivos generados quedan en `public/r/*.json`.
+
+## Uso del Orb con shaders
+
+```tsx
+import { Orb } from "@/registry/new-york/blocks/pulzar/orb"
+
+export function Demo() {
+  return (
+    <Orb width={320} height={320} theme="dark" shader={{ type: "mesh-gradient", colors: ["#5100ff", "#00ff80"], distortion: 1, swirl: 0.8, speed: 0.25, position: "background" }} />
+  )
+}
+```

@@ -1,36 +1,102 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "pulzar-registry",
+  "name": "pulzar",
   "homepage": "http://localhost:3002",
   "items": [
     {
+      "name": "pulzar/agents",
+      "type": "registry:block",
+      "title": "Pulzar Agents Docs",
+      "description": "Guía genérica para crear módulos/agentes y relacionarlos con specs de dominio.",
+      "files": [
+        {
+          "path": "registry/AGENTS.md",
+          "type": "registry:readme"
+        }
+      ]
+    },
+    {
+      "name": "pulzar/stories",
+      "type": "registry:block",
+      "title": "Story‑Driven AI (SDK Draft)",
+      "description": "Unifica prompt + tools + estado. event → story loop.",
+      "files": []
+    },
+    {
+      "name": "pulzar/all",
+      "type": "registry:block",
+      "title": "Pulzar All",
+      "description": "Instala todos los wrappers Pulzar (thread, event, prompt).",
+      "registryDependencies": [
+        "pulzar/thread",
+        "pulzar/event",
+        "pulzar/prompt",
+        "pulzar/orb"
+      ],
+      "files": []
+    },
+    {
       "name": "pulzar/thread",
-      "type": "registry:component",
+      "type": "registry:block",
       "title": "Pulzar Thread",
       "description": "Wrapper de Conversation para threads de chat Pulzar.",
-      "registryDependencies": ["https://registry.ai-sdk.dev/all.json"],
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
       "files": [
-        { "path": "registry/new-york/blocks/pulzar/thread.tsx", "type": "registry:component" }
+        {
+          "path": "registry/new-york/blocks/pulzar/thread.tsx",
+          "type": "registry:component",
+          "target": "components/pulzar/thread.tsx"
+        }
       ]
     },
     {
       "name": "pulzar/event",
-      "type": "registry:component",
+      "type": "registry:block",
       "title": "Pulzar Event",
       "description": "Wrapper universal de eventos: mensaje, fuentes, código, imágenes, reasoning, tools, etc.",
-      "registryDependencies": ["https://registry.ai-sdk.dev/all.json"],
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
       "files": [
-        { "path": "registry/new-york/blocks/pulzar/event.tsx", "type": "registry:component" }
+        {
+          "path": "registry/new-york/blocks/pulzar/event.tsx",
+          "type": "registry:component",
+          "target": "components/pulzar/event.tsx"
+        }
       ]
     },
     {
       "name": "pulzar/prompt",
-      "type": "registry:component",
+      "type": "registry:block",
       "title": "Pulzar Prompt",
       "description": "Wrapper de PromptInput con botón de voz opcional.",
-      "registryDependencies": ["https://registry.ai-sdk.dev/all.json"],
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
       "files": [
-        { "path": "registry/new-york/blocks/pulzar/prompt.tsx", "type": "registry:component" }
+        {
+          "path": "registry/new-york/blocks/pulzar/prompt.tsx",
+          "type": "registry:component",
+          "target": "components/pulzar/prompt.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pulzar/orb",
+      "type": "registry:block",
+      "title": "Pulzar Orb",
+      "description": "Orb animado (canvas) con soporte opcional de shaders (MeshGradient).",
+      "dependencies": [
+        "@paper-design/shaders-react"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/blocks/pulzar/orb.tsx",
+          "type": "registry:component",
+          "target": "components/pulzar/orb.tsx"
+        }
       ]
     }
   ]

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "pulzar-registry-all",
+  "homepage": "http://localhost:3002",
+  "items": [
+    {
+      "name": "pulzar/thread",
+      "type": "registry:component",
+      "title": "Pulzar Thread",
+      "description": "Wrapper de Conversation para threads de chat Pulzar.",
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
+      "files": [
+        { "path": "registry/new-york/blocks/pulzar/thread.tsx", "type": "registry:component" }
+      ]
+    },
+    {
+      "name": "pulzar/event",
+      "type": "registry:component",
+      "title": "Pulzar Event",
+      "description": "Wrapper universal de eventos: mensaje, fuentes, código, imágenes, reasoning, tools, etc.",
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
+      "files": [
+        { "path": "registry/new-york/blocks/pulzar/event.tsx", "type": "registry:component" }
+      ]
+    },
+    {
+      "name": "pulzar/prompt",
+      "type": "registry:component",
+      "title": "Pulzar Prompt",
+      "description": "Wrapper de PromptInput con botón de voz opcional.",
+      "registryDependencies": [
+        "https://registry.ai-sdk.dev/all.json"
+      ],
+      "files": [
+        { "path": "registry/new-york/blocks/pulzar/prompt.tsx", "type": "registry:component" }
+      ]
+    },
+    {
+      "name": "pulzar/orb",
+      "type": "registry:component",
+      "title": "Pulzar Orb",
+      "description": "Orb animado (canvas) con soporte opcional de shaders (MeshGradient).",
+      "dependencies": [
+        "@paper-design/shaders-react@0.0.46"
+      ],
+      "files": [
+        { "path": "registry/new-york/blocks/pulzar/orb.tsx", "type": "registry:component" }
+      ]
+    }
+  ]
+}
+
+

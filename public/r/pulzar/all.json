@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pulzar/all",
+  "type": "registry:block",
+  "title": "Pulzar All",
+  "description": "Instala todos los wrappers Pulzar (thread, event, prompt).",
+  "registryDependencies": [
+    "pulzar/thread",
+    "pulzar/event",
+    "pulzar/prompt",
+    "pulzar/orb"
+  ],
+  "files": []
+}

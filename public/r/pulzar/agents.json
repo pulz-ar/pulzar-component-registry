@@ -1,0 +1,10 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pulzar/agents",
+  "type": "registry:block",
+  "title": "Pulzar Agents Docs",
+  "description": "Guía genérica de arquitectura de módulos/agentes y relación con specs de dominio.",
+  "files": [
+    { "path": "registry/AGENTS.md", "type": "registry:readme", "target": "~/AGENTS.md" }
+  ]
+}
