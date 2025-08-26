@@ -30,6 +30,7 @@ export function Viewer({ item, className }: { item: RegistryItemMeta; className?
 }
 
 function Preview({ name }: { name: string }) {
+  const [messages, status] = useDemoMessages()
   if (name === "pulzar/stories") {
     return (
       <div className="border rounded-md p-2">
@@ -48,7 +49,6 @@ function Preview({ name }: { name: string }) {
   }
 
   if (name === "pulzar/thread") {
-    const [messages, status] = useDemoMessages()
     return (
       <div className="flex flex-col">
         <div className="border rounded-md">
@@ -94,7 +94,6 @@ function Preview({ name }: { name: string }) {
   }
 
   if (name === "pulzar/all") {
-    const [messages, status] = useDemoMessages()
     return (
       <div className="flex flex-col">
         <div className="border rounded-md">
