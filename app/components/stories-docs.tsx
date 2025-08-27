@@ -17,72 +17,41 @@ export function StoriesDocs() {
       </section>
 
       <section className="grid gap-2">
-        <h4 className="text-base font-medium">Backend — Definir Story y Director</h4>
-        <p className="text-sm text-muted-foreground">La Story siempre inicia con un evento. Un Director decide la <i>direction</i> (qué tool ejecutar) según el estado.</p>
-        <CodeBlock language="ts" code={`// stories/back/story.calculator.ts
-import { z } from 'zod'
-// createStory y Director provienen de 'pulz-ar/stories-core'
+        <h4 className="text-base font-medium">Backend — Director fluido por pasos</h4>
+        <p className="text-sm text-muted-foreground">Ahora definimos un Director con interfaz fluida: <code>createDirector(name).step(fn).step(fn)</code>. Cada <i>step</i> se guarda en un stack y se ejecuta en orden al invocar <code>react(event)</code>.</p>
+        <CodeBlock language="ts" code={`// app/api/stories/[threadId]/stories/story.ts
+import { createDirector } from './story'
 
-const CalculatorDirector = {
-  async decide({ state, event, tools, prompt }) {
-    // Usa prompt/LLM para decidir la próxima acción (direction)
-    const plan = await prompt({ system: 'Suma números con la tool sum', message: event.message })
-    if (plan.toolName === 'sum') { return { toolName: 'sum', args: plan.args } }
-    return { toolName: 'end', args: {} }
-  },
-}
-
-export const CalculatorStory = createStory('domain.calculator', {
-  tools: [
-    { name: 'sum', description: 'Suma dos números', parameters: z.object({ a: z.number(), b: z.number() }), async execute({ a, b }) { return { sum: a + b } } },
-  ],
-  async onEvent(event, ctx) {
-    const director = CalculatorDirector // o selecciona según ctx.state
-    const direction = await director.decide({ state: ctx.state, event, tools: this.tools, prompt: this.prompt })
-    if (direction.toolName === 'end') { return { done: true } }
-    const tool = this.tools.find(t => t.name === direction.toolName)
-    const result = await tool.execute(direction.args, ctx)
-    return { done: false, result }
-  },
-})
+export const director = createDirector('demo')
+  .step(() => console.log('hi'))
+  .step(() => console.log('hi 2'))
+// El proceso core (guardar evento, echo mock LLM y cargar thread) vive en react()
 `} />
         <h5 className="text-sm font-medium mt-2">Endpoint — recibir payload, crear evento y reaccionar</h5>
-        <CodeBlock language="ts" code={`// app/api/stories/[threadKey]/route.ts
+        <CodeBlock language="ts" code={`// app/api/stories/[threadId]/route.ts
 import { NextRequest } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
-import { init } from '@instantdb/admin'
-import schema from '@/instant.schema'
-import { createStory } from 'pulz-ar/stories-core'
-import { events } from 'pulz-zar/stores'
+import { auth } from '@clerk/nextjs/server'
+import { createDirector, events } from './stories/story'
 
-const db = init({ appId: process.env.NEXT_PUBLIC_INSTANT_APP_ID!, adminToken: process.env.INSTANT_APP_ADMIN_TOKEN!, schema })
+const director = createDirector('base')
+  .step(({ event, ctx }) => { console.log('director:print', { eventId: event.id, threadId: ctx.threadId }) })
 
-// story stateless + thread-safe: instancia única
-const story = createStory('domain.calculator', {
-  async onEvent(event, ctx) {
-    // decidir con Director interno/externo según ctx.state y event
-    // return { done: true } | { done: false, result }
-    return { done: true }
-  },
-})
+export async function POST(req: NextRequest, context: { params: { threadId: string } }) {
+  const body = await req.json().catch(() => ({} as any))
+  const threadId = (await context.params).threadId
+  if (!threadId) { return new Response('threadId requerido', { status: 400 }) }
 
-export async function POST(req: NextRequest, { params }: { params: { threadKey: string } }) {
-  const body = await req.json()
-  const user = await currentUser()
+  const { orgId, userId } = await auth()
+  if (!orgId) { return new Response('Organización no encontrada en el contexto', { status: 401 }) }
 
-  const threadKey = String(params.threadKey || '')
-  const userId = String(user.id)
-
-  // 2) crear evento (user.message-created) con builder del SDK
-  const event = events.user('message-created', {
+  const text = typeof body?.text === 'string' ? body.text : ''
+  const userEvent = events.user('message-created', {
+    userId,
     channel: 'web',
-    body
+    parts: [{ type: 'text', text }],
   })
 
-  // 3) reaccionar con la story
-  const thread = await story.react(event, { threadKey })
-
-  // 4) return updated thread (likely in processing status)
+  const thread = await director.react(userEvent, { threadId, organizationId: orgId })
   return Response.json(thread)
 }
 `} />
